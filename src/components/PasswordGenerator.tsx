@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowsClockwise, FloppyDisk } from '@phosphor-icons/react';
+import { api } from '../api';
 
 export const PasswordGenerator: React.FC = () => {
     const [length, setLength] = useState(16);
@@ -74,7 +75,7 @@ export const PasswordGenerator: React.FC = () => {
                     color="#737373"
                     onClick={async () => {
                         try {
-                            await import('../api').then(m => m.api.createVaultItem({
+                            await api.createVaultItem({
                                 type: 'login',
                                 name: 'Generated ' + new Date().toLocaleTimeString(),
                                 username: 'generated@user',
@@ -82,7 +83,7 @@ export const PasswordGenerator: React.FC = () => {
                                 iv: 'iv-' + Date.now(),
                                 password: password,
                                 favorite: false
-                            }));
+                            });
                             alert('Password Saved to Vault!');
                         } catch (e) {
                             alert('Failed to save to vault');

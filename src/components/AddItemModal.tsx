@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, FloppyDisk, LockKey, User, Pen } from '@phosphor-icons/react';
+import { api } from '../api';
 
 interface AddItemModalProps {
     onClose: () => void;
@@ -20,7 +21,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }
         e.preventDefault();
         setLoading(true);
         try {
-            await import('../api').then(m => m.api.createVaultItem({
+            await api.createVaultItem({
                 type: formData.type as 'login' | 'card' | 'note',
                 name: formData.name,
                 username: formData.username,
@@ -29,7 +30,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }
                 encryptedData: 'secure-blob-' + Date.now(), // Placeholder for encryption
                 iv: 'iv-' + Date.now(),
                 favorite: false
-            }));
+            });
             onSuccess();
         } catch (err) {
             alert('Failed to save item.');
