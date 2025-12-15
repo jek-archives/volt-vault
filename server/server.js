@@ -9,22 +9,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Allow requests from your Vercel URL (and others for debugging)
+// Allow requests from your Vercel URL
 app.use(cors({
-    origin: '*', // ⚠️ FOR DEBUGGING ONLY. Later, change this to your Vercel URL.
+    origin: process.env.CLIENT_URL || '*', // Use env var or allow all for now
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
-// Log requests for debugging
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-    next();
-});
-
-console.log("DEBUG ENV VARS:");
-console.log("PORT:", process.env.PORT);
-console.log("DATABASE_URL:", process.env.DATABASE_URL ? "DEFINED (Length: " + process.env.DATABASE_URL.length + ")" : "UNDEFINED");
 
 app.use(express.json());
 
