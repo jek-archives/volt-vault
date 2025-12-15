@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, FloppyDisk, LockKey, User, Globe, Pen } from '@phosphor-icons/react';
+import { X, FloppyDisk, LockKey, User, Pen } from '@phosphor-icons/react';
 
 interface AddItemModalProps {
     onClose: () => void;

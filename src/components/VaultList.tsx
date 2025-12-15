@@ -75,34 +75,6 @@ export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, s
                     }}>
                         Use Global Command Center to Search...
                     </div>
-                    <button
-                        onClick={async () => {
-                            try {
-                                const newItem = await import('../api').then(m => m.api.createVaultItem({
-                                    type: 'login',
-                                    name: 'New Item ' + Math.floor(Math.random() * 1000),
-                                    username: 'user@test.com',
-                                    encryptedData: 'secret-blob-' + Date.now(),
-                                    iv: 'iv-' + Date.now(),
-                                    favorite: false
-                                }));
-                                setItems(prev => [newItem, ...prev]);
-                            } catch (e) {
-                                alert('Failed to create item');
-                            }
-                        }}
-                        style={{
-                            backgroundColor: '#171717',
-                            border: '1px solid #404040',
-                            color: 'var(--color-ev-yellow)',
-                            padding: '1rem',
-                            cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center'
-                        }}
-                        title="Quick Add Test Item"
-                    >
-                        <CreditCard size={20} weight="bold" />
-                    </button>
                 </div>
 
                 <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingRight: '0.5rem' }}>

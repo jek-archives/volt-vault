@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ToggleLeft, ToggleRight, User, Bell, Shield, Cloud } from '@phosphor-icons/react';
+import { ToggleLeft, ToggleRight, Bell, Shield, Cloud } from '@phosphor-icons/react';
 
 export const Settings: React.FC = () => {
     return (

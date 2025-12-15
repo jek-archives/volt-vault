@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GearSix, ArrowsClockwise, FloppyDisk } from '@phosphor-icons/react';
+import { ArrowsClockwise, FloppyDisk } from '@phosphor-icons/react';
 
 export const PasswordGenerator: React.FC = () => {
     const [length, setLength] = useState(16);
@@ -88,7 +88,6 @@ export const PasswordGenerator: React.FC = () => {
                             alert('Failed to save to vault');
                         }
                     }}
-                    title="Save to Vault"
                 />
             </div>
 
