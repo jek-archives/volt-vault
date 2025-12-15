@@ -30,6 +30,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ view, setView, onLogout, total
 
     return (
         <>
+            {/* MOBILE BACKDROP */}
+            {isMobile && isOpen && (
+                <div
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                        position: 'fixed', inset: 0,
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        backdropFilter: 'blur(4px)',
+                        zIndex: 45
+                    }}
+                />
+            )}
+
             {/* MOBILE TOGGLE */}
             {isMobile && (
                 <button
@@ -37,7 +50,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ view, setView, onLogout, total
                     style={{
                         position: 'fixed', top: '1rem', left: '1rem', zIndex: 60,
                         backgroundColor: 'black', color: 'white', border: '1px solid #404040',
-                        padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        borderRadius: '4px'
                     }}
                 >
                     <List size={24} />
@@ -48,34 +62,42 @@ export const Sidebar: React.FC<SidebarProps> = ({ view, setView, onLogout, total
             <aside style={{
                 position: 'fixed',
                 left: 0, top: 0, bottom: 0,
-                width: 'var(--sidebar-width)',
+                width: isMobile ? '280px' : 'var(--sidebar-width)', // FIX: Use fixed width on mobile
                 backgroundColor: 'black',
                 borderRight: '1px solid #171717',
                 display: 'flex', flexDirection: 'column',
                 zIndex: 50,
                 transform: isMobile ? (isOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
-                transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: isMobile && isOpen ? '10px 0 30px rgba(0,0,0,0.5)' : 'none'
             }}>
 
                 {/* LOGO AREA (Desktop) */}
-                {!isMobile && (
-                    <div style={{ padding: '2rem', borderBottom: '1px solid #262626' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#737373', letterSpacing: '0.1em' }}>VAULT STATUS</div>
-                            {totalItems > 0 && <span style={{ backgroundColor: 'var(--color-ev-red)', color: 'white', fontSize: '0.65rem', padding: '2px 6px', fontWeight: 700 }}>{totalItems} ITEMS</span>}
+                <div style={{ padding: '2rem', borderBottom: '1px solid #262626', display: isMobile ? 'none' : 'block' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#737373', letterSpacing: '0.1em' }}>VAULT STATUS</div>
+                        {totalItems > 0 && <span style={{ backgroundColor: 'var(--color-ev-red)', color: 'white', fontSize: '0.65rem', padding: '2px 6px', fontWeight: 700 }}>{totalItems} ITEMS</span>}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{
+                            width: '40px', height: '40px',
+                            backgroundColor: 'var(--color-ev-yellow)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)'
+                        }}>
+                            <Lightning weight="fill" size={24} color="black" />
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <div style={{
-                                width: '40px', height: '40px',
-                                backgroundColor: 'var(--color-ev-yellow)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)'
-                            }}>
-                                <Lightning weight="fill" size={24} color="black" />
-                            </div>
-                            <div className="font-tech" style={{ fontSize: '1.25rem', fontWeight: 700 }}>
-                                VOLT<span className="text-yellow">VAULT</span>
-                            </div>
+                        <div className="font-tech" style={{ fontSize: '1.25rem', fontWeight: 700 }}>
+                            VOLT<span className="text-yellow">VAULT</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* MOBILE HEADER (Inside Sidebar) */}
+                {isMobile && (
+                    <div style={{ padding: '2rem 1.5rem', borderBottom: '1px solid #262626', marginTop: '3rem' }}>
+                        <div className="font-tech" style={{ fontSize: '1.5rem', fontWeight: 700 }}>
+                            VOLT<span className="text-yellow">VAULT</span>
                         </div>
                     </div>
                 )}
@@ -97,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ view, setView, onLogout, total
                 </div>
 
                 {/* NAVIGATION */}
-                <nav style={{ flex: 1, padding: '1.5rem 0' }}>
+                <nav style={{ flex: 1, padding: '1.5rem 0', overflowY: 'auto' }}>
                     {menuItems.map(item => {
                         const active = view === item.id;
                         return (
