@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Lightning, CirclesFour, Vault, CreditCard, Password, ShieldCheck, GearSix, List, SignOut } from '@phosphor-icons/react';
 import defaultProfile from '../assets/default_profile.jpg';
+import brandLogo from '../assets/brand_logo.png';
 
 interface SidebarProps {
     view: string;
@@ -79,17 +80,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ view, setView, onLogout, total
                         {totalItems > 0 && <span style={{ backgroundColor: 'var(--color-ev-red)', color: 'white', fontSize: '0.65rem', padding: '2px 6px', fontWeight: 700 }}>{totalItems} ITEMS</span>}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{
-                            width: '40px', height: '40px',
-                            backgroundColor: 'var(--color-ev-yellow)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)'
-                        }}>
-                            <Lightning weight="fill" size={24} color="black" />
-                        </div>
+                        <img
+                            src={brandLogo}
+                            alt="VoltVault"
+                            style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
+                        />
+                        {/* 
                         <div className="font-tech" style={{ fontSize: '1.25rem', fontWeight: 700 }}>
                             VOLT<span className="text-yellow">VAULT</span>
                         </div>
+                        */}
                     </div>
                 </div>
 
