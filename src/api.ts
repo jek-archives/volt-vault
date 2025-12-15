@@ -32,7 +32,14 @@ export const api = {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to fetch items');
-        return await res.json();
+        const data = await res.json();
+
+        // CLIENT-SIDE ADAPTER:
+        // map 'encryptedData' from DB back to 'password' for the UI
+        return data.map((item: any) => ({
+            ...item,
+            password: item.encryptedData // In real secure mode, this would be: decrypt(item.encryptedData)
+        }));
     },
 
     createVaultItem: async (item: any) => {

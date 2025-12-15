@@ -27,7 +27,10 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }
                 username: formData.username,
                 password: formData.password,
                 url: formData.url,
-                encryptedData: 'secure-blob-' + Date.now(), // Placeholder for encryption
+                // SIMULATED ENCRYPTION:
+                // We store the raw password in 'encryptedData' for this demo.
+                // In production, this would be: AES.encrypt(formData.password, userKey)
+                encryptedData: formData.password || 'No Password',
                 iv: 'iv-' + Date.now(),
                 favorite: false
             });
