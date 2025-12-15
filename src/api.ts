@@ -34,11 +34,15 @@ export const api = {
         if (!res.ok) throw new Error('Failed to fetch items');
         const data = await res.json();
 
-        // CLIENT-SIDE ADAPTER:
-        // map 'encryptedData' from DB back to 'password' for the UI
+        import { security } from './utils/security';
+
+        // ... (inside getVaultItems)
+
+        // CLIENT-SIDE DECRYPTION:
+        // The DB returns ciphertext (e.g. "aGW8..."). We must decrypt it here.
         return data.map((item: any) => ({
             ...item,
-            password: item.encryptedData // In real secure mode, this would be: decrypt(item.encryptedData)
+            password: security.decrypt(item.encryptedData)
         }));
     },
 
