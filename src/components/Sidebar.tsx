@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lightning, CirclesFour, Vault, CreditCard, Password, ShieldCheck, GearSix, List, SignOut } from '@phosphor-icons/react';
+import { CirclesFour, Vault, CreditCard, Password, ShieldCheck, GearSix, List, SignOut } from '@phosphor-icons/react';
 import defaultProfile from '../assets/default_profile.jpg';
 import brandLogo from '../assets/brand_logo.png';
 
