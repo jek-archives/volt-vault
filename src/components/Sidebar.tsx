@@ -90,9 +90,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ view, setView, onLogout, total
                         />
                         <div style={{ position: 'absolute', bottom: -2, right: -2, width: '12px', height: '12px', backgroundColor: 'var(--color-ev-green)', borderRadius: '50%', border: '2px solid black' }}></div>
                     </div>
-                    <div>
-                        <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>Jek Lloyd</div>
-                        <div style={{ fontSize: '0.75rem', color: '#737373' }}>IT Admin</div>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.875rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Jek Lloyd</div>
+                        <div style={{ fontSize: '0.75rem', color: '#737373', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>user@volt-vault.com</div>
                     </div>
                 </div>
 

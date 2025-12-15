@@ -112,9 +112,9 @@ export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, s
                                 }}>
                                     {getIcon(item.type)}
                                 </div>
-                                <div>
-                                    <div style={{ fontWeight: 700, color: 'white', fontSize: '1rem' }}>{item.name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#737373', fontFamily: 'monospace' }}>{item.username || item.type.toUpperCase()}</div>
+                                <div style={{ minWidth: 0, flex: 1 }}>
+                                    <div style={{ fontWeight: 700, color: 'white', fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</div>
+                                    <div style={{ fontSize: '0.75rem', color: '#737373', fontFamily: 'monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.username || item.type.toUpperCase()}</div>
                                 </div>
                             </div>
 
@@ -167,12 +167,12 @@ export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, s
                                     }}>
                                         {getIcon(selectedItem.type)}
                                     </div>
-                                    <div>
-                                        <h1 className="font-tech" style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1, marginBottom: '0.25rem' }}>{selectedItem.name}</h1>
-                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                        <h1 className="font-tech" style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1, marginBottom: '0.25rem', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{selectedItem.name}</h1>
+                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                                             <span className="text-yellow" style={{ fontSize: '0.875rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{selectedItem.type}</span>
                                             <span style={{ fontSize: '0.75rem', color: '#555' }}>|</span>
-                                            <span style={{ fontSize: '0.75rem', color: '#737373', fontFamily: 'monospace' }}>ID: {selectedItem.id}</span>
+                                            <span style={{ fontSize: '0.75rem', color: '#737373', fontFamily: 'monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>ID: {selectedItem.id}</span>
                                         </div>
                                     </div>
                                 </div>
