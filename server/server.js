@@ -21,6 +21,11 @@ app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
 });
+
+console.log("DEBUG ENV VARS:");
+console.log("PORT:", process.env.PORT);
+console.log("DATABASE_URL:", process.env.DATABASE_URL ? "DEFINED (Length: " + process.env.DATABASE_URL.length + ")" : "UNDEFINED");
+
 app.use(express.json());
 
 // Routes
