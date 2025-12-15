@@ -79,10 +79,13 @@ export const Header: React.FC<HeaderProps> = ({ onAddClick, searchTerm, onSearch
                         backgroundColor: 'var(--color-ev-yellow)',
                         color: 'black',
                         fontWeight: 700,
-                        padding: '0.75rem 1.5rem',
+                        padding: isMobile ? '0.5rem' : '0.75rem 1.5rem',
+                        height: isMobile ? '40px' : 'auto',
+                        width: isMobile ? '40px' : 'auto',
                         border: '2px solid black',
-                        display: isMobile ? 'none' : 'flex', // Hide text button on mobile, maybe icon only later
+                        display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'center',
                         gap: '0.5rem',
                         textTransform: 'uppercase',
                         letterSpacing: '0.025em',
@@ -97,25 +100,11 @@ export const Header: React.FC<HeaderProps> = ({ onAddClick, searchTerm, onSearch
                         e.currentTarget.style.transform = 'translate(0, 0)';
                         e.currentTarget.style.boxShadow = '4px 4px 0px 0px var(--color-ev-red)';
                     }}
+                    title="Add New Entry"
                 >
-                    <Plus weight="bold" size={18} />
-                    Add Entry
+                    <Plus weight="bold" size={isMobile ? 24 : 18} />
+                    {!isMobile && <span>Add Entry</span>}
                 </button>
-
-                {/* Mobile Add Button (Icon only) */}
-                {isMobile && (
-                    <button
-                        onClick={onAddClick}
-                        style={{
-                            backgroundColor: 'var(--color-ev-yellow)',
-                            border: '2px solid black',
-                            width: '40px', height: '40px',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            boxShadow: '4px 4px 0px 0px var(--color-ev-red)'
-                        }}>
-                        <Plus weight="bold" size={24} color="black" />
-                    </button>
-                )}
             </div>
         </header>
     );
