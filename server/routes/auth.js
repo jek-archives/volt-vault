@@ -25,7 +25,8 @@ router.post('/register', async (req, res) => {
 
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("REGISTER ERROR DETAILS:", error); // <--- LOG THE REAL ERROR
+        res.status(500).json({ error: error.message || 'Internal Server Error' });
     }
 });
 
