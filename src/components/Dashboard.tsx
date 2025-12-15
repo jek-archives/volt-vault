@@ -1,0 +1,220 @@
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, Lightning, Copy, CaretRight, Warning } from '@phosphor-icons/react';
+import { PasswordGenerator } from './PasswordGenerator';
+
+interface DashboardProps {
+    onNavigate: (view: string) => void;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [stats, setStats] = useState({ total: 0, weak: 0, health: 100 });
+
+    useEffect(() => {
+        // Fetch real stats
+        import('../api').then(m => m.api.getVaultItems())
+            .then(data => {
+                const weakCount = data.filter((i: any) => i.password && i.password.length < 8).length;
+                const healthScore = Math.max(0, 100 - (weakCount * 25));
+                setStats({
+                    total: data.length,
+                    weak: weakCount,
+                    health: healthScore
+                });
+            });
+
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return (
+        <div style={{
+            padding: '2rem',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(12, 1fr)',
+            gap: '1.5rem'
+        }}>
+
+            {/* STATS ROW */}
+            <div style={{
+                gridColumn: isMobile ? 'span 1' : 'span 12',
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
+                gap: '1.5rem',
+                marginBottom: '1rem'
+            }}>
+
+                {/* Stat 1: Total Voltage */}
+                <div style={{ backgroundColor: '#171717', border: '1px solid #262626', padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', right: 0, top: 0, width: '80px', height: '80px', backgroundColor: 'rgba(237, 28, 36, 0.1)', borderBottomLeftRadius: '100%' }}></div>
+                    <div className="font-tech" style={{ color: '#737373', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+                        Total Voltage
+                    </div>
+                    <div style={{ fontSize: '2.25rem', fontWeight: 700, lineHeight: 1, marginBottom: '0.25rem' }}>
+                        {stats.total}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#a3a3a3' }}>Stored credentials</div>
+                </div>
+
+                {/* Stat 2: Security Health */}
+                <div style={{
+                    gridColumn: isMobile ? 'span 1' : 'span 2',
+                    backgroundColor: '#171717',
+                    border: '1px solid #262626',
+                    padding: '1.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    position: 'relative',
+                    overflow: 'hidden'
+                }}>
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, transparent, rgba(38, 38, 38, 0.3), transparent)', transform: 'skewX(-12deg)' }}></div>
+                    <div style={{ position: 'relative', zIndex: 10 }}>
+                        <div className="font-tech" style={{ color: '#737373', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+                            Security Health
+                        </div>
+                        <div className="font-tech text-yellow" style={{ fontSize: '1.875rem', fontWeight: 700, lineHeight: 1, marginBottom: '0.25rem' }}>
+                            {stats.health}% CHARGED
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#a3a3a3' }}>{stats.weak} Weak Password{stats.weak !== 1 && 's'} detected</div>
+                    </div>
+                    {/* Battery Visualizer */}
+                    <div style={{ display: isMobile ? 'none' : 'flex', gap: '4px', position: 'relative', zIndex: 10 }}>
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} style={{ width: '8px', height: '32px', backgroundColor: 'var(--color-ev-yellow)', transform: 'skewX(-15deg)' }}></div>
+                        ))}
+                        <div style={{ width: '8px', height: '32px', backgroundColor: '#404040', transform: 'skewX(-15deg)' }}></div>
+                    </div>
+                </div>
+
+                {/* Stat 3: Alert Level */}
+                <div style={{ backgroundColor: 'var(--color-ev-red)', border: '1px solid var(--color-ev-red)', padding: '1.5rem', color: 'black', position: 'relative' }}>
+                    <div className="font-tech" style={{ color: 'rgba(0,0,0,0.7)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem', fontWeight: 700 }}>
+                        Alert Level
+                    </div>
+                    <div style={{ fontSize: '2.25rem', fontWeight: 700, lineHeight: 1, marginBottom: '0.25rem' }}>
+                        LOW
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.8)', fontWeight: 600 }}>No breaches found</div>
+                    <ShieldCheck weight="fill" style={{ position: 'absolute', bottom: '1rem', right: '1rem', fontSize: '2.5rem', opacity: 0.2 }} />
+                </div>
+            </div>
+
+            {/* RECENT CELLS */}
+            <div style={{ gridColumn: isMobile ? 'span 1' : 'span 8', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '0.5rem' }}>
+                    <h2 className="font-tech" style={{ fontSize: '1.25rem', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Lightning weight="fill" className="text-yellow" /> Recent Access
+                    </h2>
+                    <button
+                        onClick={() => onNavigate('vault')}
+                        style={{ background: 'none', border: 'none', color: '#737373', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer' }}
+                        className="hover:text-white transition-colors"
+                    >
+                        View All Cells
+                    </button>
+                </div>
+
+                <RecentCell name="SCALA ERP - Finance" subtitle="sys_admin@energizer.com" logo="S" logoBg="#0056D2" logoColor="white" strength={4} />
+                <RecentCell name="DMS - Warehouse Ops" subtitle="logistics_mgr" logo="D" logoBg="#FF4500" logoColor="white" strength={2} isLowPower />
+                <RecentCell name="Energizer Global Portal" subtitle="ph_branch_auth" logo={<i className="ph-fill ph-globe"></i>} logoBg="black" strength={3} />
+            </div>
+
+            {/* SIDE WIDGETS */}
+            <div style={{ gridColumn: isMobile ? 'span 1' : 'span 4' }}>
+                <PasswordGenerator />
+            </div>
+
+        </div>
+    );
+};
+
+interface RecentCellProps {
+    name: string;
+    subtitle: string;
+    logo: React.ReactNode;
+    logoBg: string;
+    logoColor?: string;
+    strength: number;
+    isLowPower?: boolean;
+}
+
+const RecentCell: React.FC<RecentCellProps> = ({ name, subtitle, logo, logoBg, logoColor, strength: _strength, isLowPower }) => {
+    return (
+        <div style={{
+            backgroundColor: '#171717',
+            border: '1px solid #262626',
+            padding: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer'
+        }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-ev-yellow)'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = '#262626'}
+        >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{
+                    width: '3rem', height: '3rem',
+                    borderRadius: '2px',
+                    backgroundColor: logoBg,
+                    color: logoColor || 'white',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: 700, fontSize: '1.25rem'
+                }}>
+                    {logo}
+                </div>
+                <div>
+                    <div style={{ fontWeight: 700, fontSize: '1.125rem' }}>{name}</div>
+                    <div style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: '#737373' }}>{subtitle}</div>
+                </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    {isLowPower && (
+                        <div className="blink" style={{
+                            backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                            border: '1px solid rgba(255, 165, 0, 0.3)',
+                            color: 'orange',
+                            fontSize: '0.65rem', fontWeight: 700,
+                            padding: '0.25rem 0.5rem',
+                            letterSpacing: '0.05em'
+                        }}>
+                            WEAK CREDENTIAL
+                        </div>
+                    )}
+                    <ActionButton icon={<Copy weight="bold" />} hoverColor="var(--color-ev-yellow)" />
+                    <ActionButton icon={isLowPower ? <Warning weight="bold" /> : <CaretRight weight="bold" />} hoverColor="var(--color-ev-red)" />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ActionButton = ({ icon, hoverColor }: { icon: React.ReactNode, hoverColor: string }) => (
+    <button
+        style={{
+            width: '2.5rem', height: '2.5rem',
+            border: '1px solid #404040',
+            backgroundColor: 'transparent',
+            color: '#a3a3a3',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '1.25rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#262626';
+            e.currentTarget.style.color = hoverColor;
+        }}
+        onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = '#a3a3a3';
+        }}
+    >
+        {icon}
+    </button>
+)
