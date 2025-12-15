@@ -34,10 +34,6 @@ export const api = {
         if (!res.ok) throw new Error('Failed to fetch items');
         const data = await res.json();
 
-        import { security } from './utils/security';
-
-        // ... (inside getVaultItems)
-
         // CLIENT-SIDE DECRYPTION:
         // The DB returns ciphertext (e.g. "aGW8..."). We must decrypt it here.
         return data.map((item: any) => ({

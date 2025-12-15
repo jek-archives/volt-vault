@@ -27,10 +27,6 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }
                 username: formData.username,
                 password: formData.password,
                 url: formData.url,
-                import { security } from '../utils/security';
-
-                // ... (inside component)
-
                 // REAL CLIENT-SIDE ENCRYPTION:
                 // Encrypt the password BEFORE it leaves the browser.
                 // The database will only ever see the Base64 ciphertext.
