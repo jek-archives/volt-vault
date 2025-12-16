@@ -26,7 +26,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }
                 type: formData.type as 'login' | 'card' | 'note',
                 name: formData.name,
                 username: formData.username,
-                password: formData.password,
+                // password: formData.password, // REMOVED: Do not send plain password
                 url: formData.url,
                 // REAL CLIENT-SIDE ENCRYPTION:
                 // Encrypt the password BEFORE it leaves the browser.
