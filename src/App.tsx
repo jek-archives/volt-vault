@@ -22,6 +22,12 @@ function App() {
   const [vaultItems, setVaultItems] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [editingItem, setEditingItem] = useState<any>(null); // NEW state for edit
+
+  const handleEditItem = (item: any) => {
+    setEditingItem(item);
+    setShowAddModal(true);
+  };
 
   // Fetch data globally
   useEffect(() => {
@@ -68,51 +74,44 @@ function App() {
 
         {view === 'dashboard' && <Dashboard onNavigate={setView} />}
 
-        const [editingItem, setEditingItem] = useState<any>(null); // NEW: Track item being edited
-
-  const handleEditItem = (item: any) => {
-            setEditingItem(item);
-          setShowAddModal(true);
-  };
-
           // ... (inside render)
 
-          {view === 'vault' && (
-            <VaultList
-              category="login"
-              items={isLoading ? [] : vaultItems}
-              searchTerm={searchTerm}
-              onDeleteItem={handleDeleteItem}
-              onEditItem={handleEditItem} // Pass callback
-            />
-          )}
+        {view === 'vault' && (
+          <VaultList
+            category="login"
+            items={isLoading ? [] : vaultItems}
+            searchTerm={searchTerm}
+            onDeleteItem={handleDeleteItem}
+            onEditItem={handleEditItem} // Pass callback
+          />
+        )}
 
-          {view === 'cards' && (
-            <VaultList
-              category="card"
-              items={isLoading ? [] : vaultItems}
-              searchTerm={searchTerm}
-              onDeleteItem={handleDeleteItem}
-              onEditItem={handleEditItem} // Pass callback
-            />
-          )}
+        {view === 'cards' && (
+          <VaultList
+            category="card"
+            items={isLoading ? [] : vaultItems}
+            searchTerm={searchTerm}
+            onDeleteItem={handleDeleteItem}
+            onEditItem={handleEditItem} // Pass callback
+          />
+        )}
 
-          {/* ... */}
+        {/* ... */}
 
-          {showAddModal && (
-            <AddItemModal
-              onClose={() => {
-                setShowAddModal(false);
-                setEditingItem(null); // Clear edit state on close
-              }}
-              initialData={editingItem} // Pass data if editing
-              onSuccess={() => {
-                setShowAddModal(false);
-                setEditingItem(null); // Clear edit state on success
-                setRefreshKey(prev => prev + 1);
-              }}
-            />
-          )}
+        {showAddModal && (
+          <AddItemModal
+            onClose={() => {
+              setShowAddModal(false);
+              setEditingItem(null); // Clear edit state on close
+            }}
+            initialData={editingItem} // Pass data if editing
+            onSuccess={() => {
+              setShowAddModal(false);
+              setEditingItem(null); // Clear edit state on success
+              setRefreshKey(prev => prev + 1);
+            }}
+          />
+        )}
       </main>
     </div>
   );
