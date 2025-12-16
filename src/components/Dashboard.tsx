@@ -4,9 +4,10 @@ import { PasswordGenerator } from './PasswordGenerator';
 
 interface DashboardProps {
     onNavigate: (view: string) => void;
+    onOpenItem: (item: any) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onOpenItem }) => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [stats, setStats] = useState({ total: 0, weak: 0, health: 100 });
 
@@ -116,9 +117,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                     </button>
                 </div>
 
-                <RecentCell name="SCALA ERP - Finance" subtitle="sys_admin@energizer.com" logo="S" logoBg="#0056D2" logoColor="white" strength={4} />
-                <RecentCell name="DMS - Warehouse Ops" subtitle="logistics_mgr" logo="D" logoBg="#FF4500" logoColor="white" strength={2} isLowPower />
-                <RecentCell name="Energizer Global Portal" subtitle="ph_branch_auth" logo={<i className="ph-fill ph-globe"></i>} logoBg="black" strength={3} />
+                <RecentCell
+                    name="SCALA ERP - Finance"
+                    subtitle="sys_admin@energizer.com"
+                    logo="S" logoBg="#0056D2" logoColor="white" strength={4}
+                    onClick={() => onOpenItem({
+                        id: 'scala-erp', type: 'login', name: 'SCALA ERP - Finance', username: 'sys_admin@energizer.com', password: 'secure_password_123', url: 'https://erp.energizer.com'
+                    })}
+                />
+                <RecentCell
+                    name="DMS - Warehouse Ops"
+                    subtitle="logistics_mgr"
+                    logo="D" logoBg="#FF4500" logoColor="white" strength={2} isLowPower
+                    onClick={() => onOpenItem({
+                        id: 'dms-ops', type: 'login', name: 'DMS - Warehouse Ops', username: 'logistics_mgr', password: 'weak', url: 'https://dms.energizer.com'
+                    })}
+                />
+                <RecentCell
+                    name="Energizer Global Portal"
+                    subtitle="ph_branch_auth"
+                    logo={<div style={{ width: '100%', height: '100%', backgroundColor: 'black' }}></div>}
+                    logoBg="black" strength={3}
+                    onClick={() => onOpenItem({
+                        id: 'global-portal', type: 'login', name: 'Energizer Global Portal', username: 'ph_branch_auth', password: 'password123', url: 'https://portal.energizer.com'
+                    })}
+                />
             </div>
 
             {/* SIDE WIDGETS */}
@@ -138,9 +161,10 @@ interface RecentCellProps {
     logoColor?: string;
     strength: number;
     isLowPower?: boolean;
+    onClick?: () => void;
 }
 
-const RecentCell: React.FC<RecentCellProps> = ({ name, subtitle, logo, logoBg, logoColor, strength: _strength, isLowPower }) => {
+const RecentCell: React.FC<RecentCellProps> = ({ name, subtitle, logo, logoBg, logoColor, strength: _strength, isLowPower, onClick }) => {
     return (
         <div style={{
             backgroundColor: '#171717',
@@ -152,6 +176,7 @@ const RecentCell: React.FC<RecentCellProps> = ({ name, subtitle, logo, logoBg, l
             transition: 'all 0.2s ease',
             cursor: 'pointer'
         }}
+            onClick={onClick}
             onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-ev-yellow)'}
             onMouseLeave={(e) => e.currentTarget.style.borderColor = '#262626'}
         >

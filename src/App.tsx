@@ -4,6 +4,9 @@ import { Header } from './components/Header';
 import { Dashboard } from './components/Dashboard';
 import { VaultList } from './components/VaultList';
 
+import { PasswordGenerator } from './components/PasswordGenerator';
+import { Settings } from './components/Settings';
+import { SecurityCheck } from './components/SecurityCheck';
 import './index.css';
 import { Auth } from './components/Auth';
 import { AddItemModal } from './components/AddItemModal';
@@ -21,10 +24,16 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<any>(null); // NEW state for edit
+  const [selectedItem, setSelectedItem] = useState<any>(null); // Lifted state
 
   const handleEditItem = (item: any) => {
     setEditingItem(item);
     setShowAddModal(true);
+  };
+
+  const handleOpenItem = (item: any) => {
+    setSelectedItem(item);
+    setView('vault');
   };
 
   // Fetch data globally
@@ -70,7 +79,7 @@ function App() {
           onSearchChange={setSearchTerm}
         />
 
-        {view === 'dashboard' && <Dashboard onNavigate={setView} />}
+        {view === 'dashboard' && <Dashboard onNavigate={setView} onOpenItem={handleOpenItem} />}
 
 
 
@@ -81,6 +90,8 @@ function App() {
             searchTerm={searchTerm}
             onDeleteItem={handleDeleteItem}
             onEditItem={handleEditItem} // Pass callback
+            selectedItem={selectedItem}
+            onSelectItem={setSelectedItem}
           />
         )}
 
@@ -91,8 +102,14 @@ function App() {
             searchTerm={searchTerm}
             onDeleteItem={handleDeleteItem}
             onEditItem={handleEditItem} // Pass callback
+            selectedItem={selectedItem}
+            onSelectItem={setSelectedItem}
           />
         )}
+
+        {view === 'generator' && <PasswordGenerator />}
+        {view === 'security' && <SecurityCheck onNavigate={setView} />}
+        {view === 'settings' && <Settings />}
 
         {/* ... */}
 

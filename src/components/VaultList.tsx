@@ -9,10 +9,12 @@ interface VaultListProps {
     searchTerm: string;
     onDeleteItem: (id: string) => void;
     onEditItem: (item: VaultItem) => void; // NEW PROP
+    selectedItem: VaultItem | null;
+    onSelectItem: (item: VaultItem | null) => void;
 }
 
-export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, searchTerm, onDeleteItem, onEditItem }) => {
-    const [selectedItem, setSelectedItem] = useState<VaultItem | null>(null);
+export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, searchTerm, onDeleteItem, onEditItem, selectedItem, onSelectItem }) => {
+    // const [selectedItem, setSelectedItem] = useState<VaultItem | null>(null); // Lifted to App
     const [showPassword, setShowPassword] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -82,7 +84,7 @@ export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, s
                     {filteredItems.map(item => (
                         <div
                             key={item.id}
-                            onClick={() => { setSelectedItem(item); setShowPassword(false); }}
+                            onClick={() => { onSelectItem(item); setShowPassword(false); }}
                             className="group"
                             style={{
                                 backgroundColor: selectedItem?.id === item.id ? '#171717' : 'transparent',
@@ -150,7 +152,7 @@ export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, s
                         <div className="diagonal-stripe" style={{ padding: '2rem', borderBottom: '1px solid #262626', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {/* Mobile Back Button */}
                             {isMobile && (
-                                <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                                <button onClick={() => onSelectItem(null)} style={{ background: 'none', border: 'none', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
                                     <ArrowLeft weight="bold" /> BACK TO DATABASE
                                 </button>
                             )}
@@ -191,7 +193,7 @@ export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, s
                                             onClick={async () => {
                                                 if (confirm(`Are you sure you want to delete ${selectedItem.name}? This cannot be undone.`)) {
                                                     onDeleteItem(selectedItem.id);
-                                                    setSelectedItem(null);
+                                                    onSelectItem(null);
                                                 }
                                             }}
                                             className="btn"
