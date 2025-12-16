@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, FloppyDisk, LockKey, User, Pen } from '@phosphor-icons/react';
+import { X, FloppyDisk, LockKey, User, Pen, CreditCard } from '@phosphor-icons/react';
 import { api } from '../api';
 import { security } from '../utils/security';
 
@@ -118,13 +118,18 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess, 
                     </div>
 
                     <div className="input-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#737373', textTransform: 'uppercase' }}>Username / ID</label>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#737373', textTransform: 'uppercase' }}>
+                            {formData.type === 'card' ? 'Card Number' : 'Username / ID'}
+                        </label>
                         <div style={{ position: 'relative' }}>
-                            <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#555' }} />
+                            {formData.type === 'card' ?
+                                <CreditCard size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#555' }} /> :
+                                <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#555' }} />
+                            }
                             <input
                                 value={formData.username}
                                 onChange={e => setFormData({ ...formData, username: e.target.value })}
-                                placeholder="e.g. user@company.com"
+                                placeholder={formData.type === 'card' ? "0000 0000 0000 0000" : "e.g. user@company.com"}
                                 style={{
                                     width: '100%', padding: '1rem 1rem 1rem 3rem',
                                     backgroundColor: '#0a0a0a', border: '1px solid #262626', color: 'white',
@@ -135,14 +140,16 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess, 
                     </div>
 
                     <div className="input-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#737373', textTransform: 'uppercase' }}>Password</label>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#737373', textTransform: 'uppercase' }}>
+                            {formData.type === 'card' ? 'CVV / Security Code' : 'Password'}
+                        </label>
                         <div style={{ position: 'relative' }}>
                             <LockKey size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#555' }} />
                             <input
-                                type="password"
+                                type={formData.type === 'card' ? "text" : "password"}
                                 value={formData.password}
                                 onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                placeholder="••••••••••••"
+                                placeholder={formData.type === 'card' ? "123" : "••••••••••••"}
                                 style={{
                                     width: '100%', padding: '1rem 1rem 1rem 3rem',
                                     backgroundColor: '#0a0a0a', border: '1px solid #262626', color: 'white',

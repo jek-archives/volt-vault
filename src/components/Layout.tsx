@@ -12,7 +12,7 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children, currentView, onChangeView, onLogout }) => {
     return (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
-            <Sidebar view={currentView} setView={onChangeView} onLogout={onLogout} totalItems={0} />
+            <Sidebar view={currentView} setView={onChangeView} onLogout={onLogout} totalItems={0} username="User" />
             <main style={{
                 marginLeft: 'var(--sidebar-width)',
                 flex: 1,

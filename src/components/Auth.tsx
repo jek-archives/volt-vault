@@ -5,7 +5,7 @@ import { Lightning, ArrowRight } from '@phosphor-icons/react';
 import { api } from '../api';
 
 interface AuthProps {
-    onLogin: () => void;
+    onLogin: (username: string) => void;
 }
 
 export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
@@ -25,11 +25,11 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
             if (isRegistering) {
                 await api.register(email, password);
                 // Auto login after register
-                await api.login(email, password);
-                onLogin();
+                const data = await api.login(email, password);
+                onLogin(data.username);
             } else {
-                await api.login(email, password);
-                onLogin();
+                const data = await api.login(email, password);
+                onLogin(data.username);
             }
         } catch (err) {
             setError(isRegistering ? 'Registration failed. Username may be taken.' : 'Login failed. Check credentials.');

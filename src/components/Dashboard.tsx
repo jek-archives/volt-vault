@@ -5,25 +5,33 @@ import { PasswordGenerator } from './PasswordGenerator';
 interface DashboardProps {
     onNavigate: (view: string) => void;
     onOpenItem: (item: any) => void;
+    items: any[];
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onOpenItem }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onOpenItem, items }) => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [stats, setStats] = useState({ total: 0, weak: 0, health: 100 });
+    const [recentItems, setRecentItems] = useState<any[]>([]);
 
     useEffect(() => {
-        // Fetch real stats
-        import('../api').then(m => m.api.getVaultItems())
-            .then(data => {
-                const weakCount = data.filter((i: any) => i.password && i.password.length < 8).length;
-                const healthScore = Math.max(0, 100 - (weakCount * 25));
-                setStats({
-                    total: data.length,
-                    weak: weakCount,
-                    health: healthScore
-                });
-            });
+        // Calculate stats from props
+        const weakCount = items.filter((i: any) => i.password && i.password.length < 8).length;
+        const healthScore = Math.max(0, 100 - (weakCount * 25));
+        setStats({
+            total: items.length,
+            weak: weakCount,
+            health: healthScore
+        });
 
+        // Get 3 most recent
+        // Assuming items created recently are at the end? Or we need to sort by createdAt if available.
+        // API doesn't seem to return createdAt in the object map in api.ts? 
+        // Prisma schema has createdAt. Let's assume the array is roughly in order or we just take the last 3.
+        // Actually, let's just reverse and take 3.
+        setRecentItems([...items].reverse().slice(0, 3));
+    }, [items]);
+
+    useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
@@ -117,31 +125,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onOpenItem }) 
                     </button>
                 </div>
 
-                <RecentCell
-                    name="SCALA ERP - Finance"
-                    subtitle="sys_admin@energizer.com"
-                    logo="S" logoBg="#0056D2" logoColor="white" strength={4}
-                    onClick={() => onOpenItem({
-                        id: 'scala-erp', type: 'login', name: 'SCALA ERP - Finance', username: 'sys_admin@energizer.com', password: 'secure_password_123', url: 'https://erp.energizer.com'
-                    })}
-                />
-                <RecentCell
-                    name="DMS - Warehouse Ops"
-                    subtitle="logistics_mgr"
-                    logo="D" logoBg="#FF4500" logoColor="white" strength={2} isLowPower
-                    onClick={() => onOpenItem({
-                        id: 'dms-ops', type: 'login', name: 'DMS - Warehouse Ops', username: 'logistics_mgr', password: 'weak', url: 'https://dms.energizer.com'
-                    })}
-                />
-                <RecentCell
-                    name="Energizer Global Portal"
-                    subtitle="ph_branch_auth"
-                    logo={<div style={{ width: '100%', height: '100%', backgroundColor: 'black' }}></div>}
-                    logoBg="black" strength={3}
-                    onClick={() => onOpenItem({
-                        id: 'global-portal', type: 'login', name: 'Energizer Global Portal', username: 'ph_branch_auth', password: 'password123', url: 'https://portal.energizer.com'
-                    })}
-                />
+                {recentItems.length === 0 ? (
+                    <div style={{ padding: '2rem', textAlign: 'center', color: '#737373', border: '1px dashed #404040' }}>
+                        NO RECENT ACTIVITY
+                    </div>
+                ) : (
+                    recentItems.map(item => (
+                        <RecentCell
+                            key={item.id}
+                            name={item.name}
+                            subtitle={item.username || 'No Identity'}
+                            logo={item.name.charAt(0).toUpperCase()}
+                            logoBg={item.type === 'card' ? '#00A36C' : '#0056D2'} // Green for cards, Blue for logins
+                            logoColor="white"
+                            strength={item.password?.length < 8 ? 2 : 4}
+                            isLowPower={item.password?.length < 8}
+                            onClick={() => onOpenItem(item)}
+                        />
+                    ))
+                )}
             </div>
 
             {/* SIDE WIDGETS */}

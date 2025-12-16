@@ -15,6 +15,7 @@ import { api } from './api';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('User'); // NEW STATE
   const [view, setView] = useState('dashboard');
   const [showAddModal, setShowAddModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -57,7 +58,10 @@ function App() {
   };
 
   if (!isAuthenticated) {
-    return <Auth onLogin={() => setIsAuthenticated(true)} />;
+    return <Auth onLogin={(user) => {
+      setUsername(user);
+      setIsAuthenticated(true);
+    }} />;
   }
 
   return (
@@ -69,6 +73,7 @@ function App() {
         setView={setView}
         onLogout={() => setIsAuthenticated(false)}
         totalItems={vaultItems.length}
+        username={username}
       />
 
       <main style={{ marginLeft: 'var(--sidebar-width)', flex: 1, display: 'flex', flexDirection: 'column' }} className="diagonal-stripe">
@@ -79,7 +84,7 @@ function App() {
           onSearchChange={setSearchTerm}
         />
 
-        {view === 'dashboard' && <Dashboard onNavigate={setView} onOpenItem={handleOpenItem} />}
+        {view === 'dashboard' && <Dashboard onNavigate={setView} onOpenItem={handleOpenItem} items={vaultItems} />}
 
 
 
