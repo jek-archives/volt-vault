@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import brandLogo from '../assets/brand_logo.png';
+import logo from '../assets/logo.png';
 import { Lightning, ArrowRight } from '@phosphor-icons/react';
 
 import { api } from '../api';
@@ -62,7 +62,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                                 transform: 'skewX(-10deg)',
                                 opacity: 0.5
                             }}></div>
-                            <img src={brandLogo} alt="Eveready" style={{ height: '64px', position: 'relative', zIndex: 10 }} />
+                            <img src={logo} alt="Eveready" style={{ height: '64px', position: 'relative', zIndex: 10 }} />
                         </div>
 
                         <h1 className="font-tech" style={{ fontSize: '2rem', fontWeight: 700, color: 'white', letterSpacing: '-0.05em' }}>

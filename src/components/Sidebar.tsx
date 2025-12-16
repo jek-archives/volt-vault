@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CirclesFour, Vault, CreditCard, Password, ShieldCheck, GearSix, List, SignOut } from '@phosphor-icons/react';
 import defaultProfile from '../assets/default_profile.jpg';
-import brandLogo from '../assets/brand_logo.png';
+import logo from '../assets/logo.png';
 
 interface SidebarProps {
     view: string;
@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ view, setView, onLogout, total
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <img
-                            src={brandLogo}
+                            src={logo}
                             alt="VoltVault"
                             style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
                         />

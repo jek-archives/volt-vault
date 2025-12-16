@@ -3,9 +3,7 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { Dashboard } from './components/Dashboard';
 import { VaultList } from './components/VaultList';
-import { PasswordGenerator } from './components/PasswordGenerator';
-import { Settings } from './components/Settings';
-import { SecurityCheck } from './components/SecurityCheck';
+
 import './index.css';
 import { Auth } from './components/Auth';
 import { AddItemModal } from './components/AddItemModal';
