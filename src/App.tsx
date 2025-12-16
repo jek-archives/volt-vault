@@ -72,7 +72,7 @@ function App() {
 
         {view === 'dashboard' && <Dashboard onNavigate={setView} />}
 
-          // ... (inside render)
+
 
         {view === 'vault' && (
           <VaultList
