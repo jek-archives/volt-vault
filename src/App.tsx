@@ -68,44 +68,51 @@ function App() {
 
         {view === 'dashboard' && <Dashboard onNavigate={setView} />}
 
-        {view === 'vault' && (
-          <VaultList
-            category="login"
-            items={isLoading ? [] : vaultItems}
-            searchTerm={searchTerm}
-            onDeleteItem={handleDeleteItem}
-          />
-        )}
+        const [editingItem, setEditingItem] = useState<any>(null); // NEW: Track item being edited
 
-        {view === 'cards' && (
-          <VaultList
-            category="card"
-            items={isLoading ? [] : vaultItems}
-            searchTerm={searchTerm}
-            onDeleteItem={handleDeleteItem}
-          />
-        )}
+  const handleEditItem = (item: any) => {
+            setEditingItem(item);
+          setShowAddModal(true);
+  };
 
-        {view === 'security' && <SecurityCheck onNavigate={setView} />}
+          // ... (inside render)
 
-        {view === 'generator' && (
-          <div style={{ padding: '2rem', maxWidth: '800px' }}>
-            <h2 className="font-tech text-yellow" style={{ fontSize: '1.5rem', marginBottom: '1.5rem', textTransform: 'uppercase', fontWeight: 700 }}>Password Generator Tools</h2>
-            <PasswordGenerator />
-          </div>
-        )}
+          {view === 'vault' && (
+            <VaultList
+              category="login"
+              items={isLoading ? [] : vaultItems}
+              searchTerm={searchTerm}
+              onDeleteItem={handleDeleteItem}
+              onEditItem={handleEditItem} // Pass callback
+            />
+          )}
 
-        {view === 'settings' && <Settings />}
+          {view === 'cards' && (
+            <VaultList
+              category="card"
+              items={isLoading ? [] : vaultItems}
+              searchTerm={searchTerm}
+              onDeleteItem={handleDeleteItem}
+              onEditItem={handleEditItem} // Pass callback
+            />
+          )}
 
-        {showAddModal && (
-          <AddItemModal
-            onClose={() => setShowAddModal(false)}
-            onSuccess={() => {
-              setShowAddModal(false);
-              setRefreshKey(prev => prev + 1);
-            }}
-          />
-        )}
+          {/* ... */}
+
+          {showAddModal && (
+            <AddItemModal
+              onClose={() => {
+                setShowAddModal(false);
+                setEditingItem(null); // Clear edit state on close
+              }}
+              initialData={editingItem} // Pass data if editing
+              onSuccess={() => {
+                setShowAddModal(false);
+                setEditingItem(null); // Clear edit state on success
+                setRefreshKey(prev => prev + 1);
+              }}
+            />
+          )}
       </main>
     </div>
   );

@@ -8,9 +8,10 @@ interface VaultListProps {
     items: VaultItem[];
     searchTerm: string;
     onDeleteItem: (id: string) => void;
+    onEditItem: (item: VaultItem) => void; // NEW PROP
 }
 
-export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, searchTerm, onDeleteItem }) => {
+export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, searchTerm, onDeleteItem, onEditItem }) => {
     const [selectedItem, setSelectedItem] = useState<VaultItem | null>(null);
     const [showPassword, setShowPassword] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -180,7 +181,7 @@ export const VaultList: React.FC<VaultListProps> = ({ category = 'all', items, s
                                 {!isMobile && (
                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                                         <button
-                                            onClick={() => alert("Edit Functionality: To maintain audit logs, we recommend deleting and re-creating items for now.")}
+                                            onClick={() => onEditItem(selectedItem)} // CALL PROP
                                             className="btn"
                                             style={{ padding: '0.5rem 1.5rem', border: '1px solid #404040', color: '#a3a3a3', cursor: 'pointer', background: 'transparent' }}
                                         >

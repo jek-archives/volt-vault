@@ -53,7 +53,20 @@ export const api = {
             },
             body: JSON.stringify(item)
         });
-        if (!res.ok) throw new Error('Failed to create item');
+        return await res.json();
+    },
+
+    updateVaultItem: async (id: string, item: any) => {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}/vault/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(item)
+        });
+        if (!res.ok) throw new Error('Failed to update item');
         return await res.json();
     },
 

@@ -6,38 +6,47 @@ import { security } from '../utils/security';
 interface AddItemModalProps {
     onClose: () => void;
     onSuccess: () => void;
+    initialData?: any; // Optional: If provided, we are in EDIT mode
 }
 
-export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }) => {
+export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess, initialData }) => {
     const [formData, setFormData] = useState({
-        name: '',
-        username: '',
-        password: '',
-        url: '',
-        type: 'login'
+        name: initialData?.name || '',
+        username: initialData?.username || '',
+        password: initialData?.password || '', // Already decrypted by the UI before passing here? Or we use it as is?
+        // Wait, 'initialData' comes from VaultList/App where 'password' IS decrypted (via api.ts).
+        // So we can just use it.
+        url: initialData?.url || '',
+        type: initialData?.type || 'login'
     });
     const [loading, setLoading] = useState(false);
+    const isEditMode = !!initialData;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.createVaultItem({
+            const payload = {
                 type: formData.type as 'login' | 'card' | 'note',
                 name: formData.name,
                 username: formData.username,
-                // password: formData.password, // REMOVED: Do not send plain password
+                // password: formData.password, // REMOVED: Never send plain text
                 url: formData.url,
-                // REAL CLIENT-SIDE ENCRYPTION:
-                // Encrypt the password BEFORE it leaves the browser.
-                // The database will only ever see the Base64 ciphertext.
+                // ENCRYPTION:
+                // Whether adding or editing, we encrypt the current password state.
                 encryptedData: security.encrypt(formData.password),
                 iv: 'iv-' + Date.now(),
-                favorite: false
-            });
+                favorite: initialData?.favorite || false
+            };
+
+            if (isEditMode) {
+                await api.updateVaultItem(initialData.id, payload);
+            } else {
+                await api.createVaultItem(payload);
+            }
             onSuccess();
         } catch (err) {
-            alert('Failed to save item.');
+            alert(isEditMode ? 'Failed to update item.' : 'Failed to save item.');
             setLoading(false);
         }
     };
@@ -58,7 +67,9 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }
             }}>
                 {/* Header */}
                 <div className="diagonal-stripe" style={{ padding: '1.5rem', borderBottom: '1px solid #262626', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h2 className="font-tech" style={{ fontSize: '1.5rem', fontWeight: 700, textTransform: 'uppercase' }}>New Secure Entry</h2>
+                    <h2 className="font-tech" style={{ fontSize: '1.5rem', fontWeight: 700, textTransform: 'uppercase' }}>
+                        {isEditMode ? 'Edit Secure Entry' : 'New Secure Entry'}
+                    </h2>
                     <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#737373', cursor: 'pointer' }}>
                         <X size={24} weight="bold" />
                     </button>
@@ -151,7 +162,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ onClose, onSuccess }
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
                         }}
                     >
-                        {loading ? 'Encrypting...' : <><FloppyDisk size={20} weight="bold" /> Save to Vault</>}
+                        {loading ? 'Encrypting...' : <><FloppyDisk size={20} weight="bold" /> {isEditMode ? 'Update Vault' : 'Save to Vault'}</>}
                     </button>
 
                 </form>
